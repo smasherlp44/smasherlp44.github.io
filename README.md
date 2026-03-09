@@ -109,12 +109,12 @@
       color: var(--muted);
     }
 
-    .card-wrap {
-      position: relative;
-      height: 720px;
-      overflow: hidden;
-      touch-action: pan-y;
-    }
+.card-wrap {
+  position: relative;
+  min-height: 780px;
+  height: auto;
+  overflow: visible;
+}
 
     .profile-card {
       position: absolute;
