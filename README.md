@@ -111,27 +111,64 @@
 
 .card-wrap {
   position: relative;
-  min-height: 780px;
-  height: auto;
+  min-height: 950px;
   overflow: visible;
+  touch-action: pan-y;
 }
 
-    .profile-card {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, #fffef8, #fff6da);
-      border-radius: 26px;
-      border: 2px solid #f1d998;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.6);
-      padding: 18px 16px 20px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      will-change: transform, opacity;
-      transition: transform 0.28s ease, opacity 0.28s ease;
-    }
+.profile-card {
+  position: absolute;
+  inset: 0;
+  padding: 16px 12px 14px;
+}
 
+.status {
+  min-height: 40px;
+  font-size: 13px;
+  line-height: 1.35;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 6px;
+}
+
+.swipe-hint {
+  font-size: 12px;
+  line-height: 1.3;
+  text-align: center;
+}
+
+.nav-row,
+.button-row,
+.action-row {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+button.drink-btn,
+button.control,
+button.nav {
+  font-size: 14px;
+  padding: 10px 12px;
+}
+
+button.drink-btn {
+  min-width: 0;
+  width: calc(50% - 6px);
+}
+
+button.nav {
+  min-width: 0;
+  width: calc(50% - 6px);
+}
+
+.button-row .control {
+  min-width: 0;
+  flex: 1 1 140px;
+}
     .profile-name {
       font-size: 30px;
       font-weight: 800;
