@@ -111,7 +111,7 @@
 
     .card-wrap {
       position: relative;
-      height: 560px;
+      height: 720px;
       overflow: hidden;
       touch-action: pan-y;
     }
@@ -123,7 +123,7 @@
       border-radius: 26px;
       border: 2px solid #f1d998;
       box-shadow: inset 0 0 0 1px rgba(255,255,255,0.6);
-      padding: 18px 16px 16px;
+      padding: 18px 16px 20px;
       text-align: center;
       display: flex;
       flex-direction: column;
