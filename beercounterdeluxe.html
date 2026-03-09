@@ -4,9 +4,14 @@
   <meta charset="UTF-8" />
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"
   />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#f3c969" />
+  <link rel="apple-touch-icon" href="icon-180.png" />
   <title>Bier & Drinks Counter Deluxe</title>
+
   <style>
     * {
       box-sizing: border-box;
@@ -19,12 +24,16 @@
       --card: rgba(255, 255, 255, 0.95);
       --text: #2a2a2a;
       --accent: #8b5a00;
-      --accent-soft: #f4e1ad;
       --danger: #8b0000;
       --warning: #b35c00;
       --muted: #6b6b6b;
       --shadow: 0 14px 35px rgba(0, 0, 0, 0.18);
       --radius: 24px;
+    }
+
+    html {
+      height: 100%;
+      -webkit-text-size-adjust: 100%;
     }
 
     body {
@@ -35,9 +44,11 @@
       color: var(--text);
       padding: 14px;
       overflow-x: hidden;
+      -webkit-text-size-adjust: 100%;
     }
 
     .app {
+      width: 100%;
       max-width: 430px;
       margin: 0 auto;
       position: relative;
@@ -48,6 +59,7 @@
       margin: 6px 0 14px;
       font-size: 28px;
       color: #5a3b00;
+      line-height: 1.2;
     }
 
     .panel {
@@ -60,8 +72,14 @@
 
     .totals {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
       gap: 10px;
+    }
+
+    @media (min-width: 390px) {
+      .totals {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
     }
 
     .total-box {
@@ -79,8 +97,9 @@
     }
 
     .total-value {
-      font-size: 34px;
+      font-size: 24px;
       font-weight: 800;
+      word-break: break-word;
     }
 
     .date-line {
@@ -92,7 +111,7 @@
 
     .card-wrap {
       position: relative;
-      height: 470px;
+      height: 560px;
       overflow: hidden;
       touch-action: pan-y;
     }
@@ -159,6 +178,7 @@
     .mini-value {
       font-size: 28px;
       font-weight: 800;
+      word-break: break-word;
     }
 
     .action-row {
@@ -280,6 +300,7 @@
       align-items: center;
       gap: 8px;
       font-weight: 700;
+      flex-wrap: wrap;
     }
 
     .rank-name {
@@ -306,6 +327,7 @@
       margin-top: 6px;
       font-size: 13px;
       color: var(--muted);
+      line-height: 1.45;
     }
 
     .history-date {
@@ -349,20 +371,21 @@
 
     <div class="panel">
       <div class="totals">
-        <div class="totals totals-3">
-  <div class="total-box">
-    <div class="total-label">Bier gesamt / heute</div>
-    <div id="beerTotals" class="total-value">0 / 0</div>
-  </div>
-  <div class="total-box">
-    <div class="total-label">Drinks gesamt / heute</div>
-    <div id="drinkTotals" class="total-value">0 / 0</div>
-  </div>
-  <div class="total-box">
-    <div class="total-label">Alkohol gesamt / heute</div>
-    <div id="alcoholTotals" class="total-value">0,00 L / 0,00 L</div>
-  </div>
-</div>
+        <div class="total-box">
+          <div class="total-label">Bier gesamt / heute</div>
+          <div id="beerTotals" class="total-value">0 / 0</div>
+        </div>
+        <div class="total-box">
+          <div class="total-label">Drinks gesamt / heute</div>
+          <div id="drinkTotals" class="total-value">0 / 0</div>
+        </div>
+        <div class="total-box">
+          <div class="total-label">Liter gesamt / heute</div>
+          <div id="alcoholTotals" class="total-value">0,00 L / 0,00 L</div>
+        </div>
+      </div>
+      <div id="dateLine" class="date-line"></div>
+    </div>
 
     <div class="panel">
       <div id="cardWrap" class="card-wrap">
@@ -405,6 +428,20 @@
                 <button id="removeDrinkBtn" class="drink-btn">-1 Drink</button>
               </div>
             </div>
+
+            <div class="drink-section">
+              <div class="drink-title">📏 Liter gesamt</div>
+              <div class="counter-grid">
+                <div class="mini-box">
+                  <div class="mini-label">Gesamt</div>
+                  <div id="profileAlcoholAllTime" class="mini-value">0,00 L</div>
+                </div>
+                <div class="mini-box">
+                  <div class="mini-label">Heute</div>
+                  <div id="profileAlcoholToday" class="mini-value">0,00 L</div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div>
@@ -440,7 +477,9 @@
 
   <script>
     const profiles = ["Alex", "Arthur", "Micha", "Leon", "Eric"];
-    const STORAGE_KEY = "bierCounterDeluxeV3";
+    const STORAGE_KEY = "bierCounterDeluxeV4";
+    const BEER_LITERS = 0.5;
+    const DRINK_LITERS = 0.33;
 
     function defaultCounts() {
       return Object.fromEntries(
@@ -469,6 +508,14 @@
 
     function getGermanWeekday() {
       return new Date().toLocaleDateString("de-DE", { weekday: "long" });
+    }
+
+    function litersForCounts(beerCount, drinkCount) {
+      return beerCount * BEER_LITERS + drinkCount * DRINK_LITERS;
+    }
+
+    function formatLiters(value) {
+      return `${value.toFixed(2).replace(".", ",")} L`;
     }
 
     function safeLoad() {
@@ -527,17 +574,46 @@
       return profiles.reduce((sum, name) => sum + state.allTime[name][type], 0);
     }
 
-    function getCombinedTodayForProfile(name) {
-      return state.daily.counts[name].beer + state.daily.counts[name].drinks;
-    }
-
     function getCombinedAllTimeForProfile(name) {
       return state.allTime[name].beer + state.allTime[name].drinks;
+    }
+
+    function getDailyAlcoholLiters() {
+      return profiles.reduce((sum, name) => {
+        return sum + litersForCounts(
+          state.daily.counts[name].beer,
+          state.daily.counts[name].drinks
+        );
+      }, 0);
+    }
+
+    function getGrandAlcoholLiters() {
+      return profiles.reduce((sum, name) => {
+        return sum + litersForCounts(
+          state.allTime[name].beer,
+          state.allTime[name].drinks
+        );
+      }, 0);
+    }
+
+    function getProfileAlcoholToday(name) {
+      return litersForCounts(
+        state.daily.counts[name].beer,
+        state.daily.counts[name].drinks
+      );
+    }
+
+    function getProfileAlcoholAllTime(name) {
+      return litersForCounts(
+        state.allTime[name].beer,
+        state.allTime[name].drinks
+      );
     }
 
     function archiveCurrentEvening(reason = "automatic") {
       const totalBeer = getDailyTotal("beer");
       const totalDrinks = getDailyTotal("drinks");
+      const totalLiters = getDailyAlcoholLiters();
       const total = totalBeer + totalDrinks;
 
       if (total <= 0) {
@@ -555,6 +631,7 @@
         counts: JSON.parse(JSON.stringify(state.daily.counts)),
         totalBeer,
         totalDrinks,
+        totalLiters,
         total
       });
 
@@ -576,12 +653,15 @@
 
     const beerTotalsEl = document.getElementById("beerTotals");
     const drinkTotalsEl = document.getElementById("drinkTotals");
+    const alcoholTotalsEl = document.getElementById("alcoholTotals");
     const dateLineEl = document.getElementById("dateLine");
     const profileNameEl = document.getElementById("profileName");
     const profileBeerAllTimeEl = document.getElementById("profileBeerAllTime");
     const profileBeerTodayEl = document.getElementById("profileBeerToday");
     const profileDrinksAllTimeEl = document.getElementById("profileDrinksAllTime");
     const profileDrinksTodayEl = document.getElementById("profileDrinksToday");
+    const profileAlcoholAllTimeEl = document.getElementById("profileAlcoholAllTime");
+    const profileAlcoholTodayEl = document.getElementById("profileAlcoholToday");
     const statusTextEl = document.getElementById("statusText");
     const dotsEl = document.getElementById("dots");
     const leaderboardEl = document.getElementById("leaderboard");
@@ -607,16 +687,17 @@
       const name = currentProfile();
       const beerToday = state.daily.counts[name].beer;
       const drinksToday = state.daily.counts[name].drinks;
+      const litersToday = getProfileAlcoholToday(name);
       const totalToday = beerToday + drinksToday;
 
       if (totalToday >= 10) {
-        statusTextEl.textContent = `${name} ist heute stabil unterwegs. 🍻`;
+        statusTextEl.textContent = `${name} ist heute stabil unterwegs. ${formatLiters(litersToday)}`;
       } else if (totalToday >= 5) {
-        statusTextEl.textContent = `Läuft bei ${name}: ${beerToday} Bier, ${drinksToday} Drinks`;
+        statusTextEl.textContent = `Läuft bei ${name}: ${beerToday} Bier, ${drinksToday} Drinks · ${formatLiters(litersToday)}`;
       } else if (totalToday === 0) {
         statusTextEl.textContent = "Noch nüchtern heute.";
       } else {
-        statusTextEl.textContent = `${name}: ${beerToday} Bier · ${drinksToday} Drinks`;
+        statusTextEl.textContent = `${name}: ${beerToday} Bier · ${drinksToday} Drinks · ${formatLiters(litersToday)}`;
       }
     }
 
@@ -654,9 +735,9 @@
             <div>${getCombinedAllTimeForProfile(name)} gesamt</div>
           </div>
           <div class="leaderboard-sub">
-            🍺 Bier: ${state.allTime[name].beer} gesamt / ${state.daily.counts[name].beer} heute
-            <br>
-            🍹 Drinks: ${state.allTime[name].drinks} gesamt / ${state.daily.counts[name].drinks} heute
+            🍺 Bier: ${state.allTime[name].beer} gesamt / ${state.daily.counts[name].beer} heute<br>
+            🍹 Drinks: ${state.allTime[name].drinks} gesamt / ${state.daily.counts[name].drinks} heute<br>
+            📏 Liter: ${formatLiters(getProfileAlcoholAllTime(name))} gesamt / ${formatLiters(getProfileAlcoholToday(name))} heute
           </div>
         `;
 
@@ -680,7 +761,8 @@
           .map(name => {
             const beer = entry.counts[name]?.beer || 0;
             const drinks = entry.counts[name]?.drinks || 0;
-            return `${name}: 🍺 ${beer} · 🍹 ${drinks}`;
+            const liters = litersForCounts(beer, drinks);
+            return `${name}: 🍺 ${beer} · 🍹 ${drinks} · 📏 ${formatLiters(liters)}`;
           })
           .join("<br>");
 
@@ -688,7 +770,8 @@
           <div class="history-date">${entry.label}</div>
           <div class="history-total">
             Gesamt an diesem Abend: <strong>${entry.total}</strong><br>
-            🍺 Bier: <strong>${entry.totalBeer}</strong> · 🍹 Drinks: <strong>${entry.totalDrinks}</strong>
+            🍺 Bier: <strong>${entry.totalBeer}</strong> · 🍹 Drinks: <strong>${entry.totalDrinks}</strong><br>
+            📏 Liter: <strong>${formatLiters(entry.totalLiters || 0)}</strong>
           </div>
           <div class="history-breakdown">${breakdown}</div>
         `;
@@ -702,6 +785,7 @@
 
       beerTotalsEl.textContent = `${getGrandTotal("beer")} / ${getDailyTotal("beer")}`;
       drinkTotalsEl.textContent = `${getGrandTotal("drinks")} / ${getDailyTotal("drinks")}`;
+      alcoholTotalsEl.textContent = `${formatLiters(getGrandAlcoholLiters())} / ${formatLiters(getDailyAlcoholLiters())}`;
       dateLineEl.textContent = `${getGermanWeekday()} · ${formatDateGerman(getTodayKey())}`;
 
       profileNameEl.textContent = name;
@@ -709,6 +793,8 @@
       profileBeerTodayEl.textContent = state.daily.counts[name].beer;
       profileDrinksAllTimeEl.textContent = state.allTime[name].drinks;
       profileDrinksTodayEl.textContent = state.daily.counts[name].drinks;
+      profileAlcoholAllTimeEl.textContent = formatLiters(getProfileAlcoholAllTime(name));
+      profileAlcoholTodayEl.textContent = formatLiters(getProfileAlcoholToday(name));
 
       updateStatus();
       renderDots();
