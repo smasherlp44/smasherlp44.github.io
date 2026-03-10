@@ -112,7 +112,7 @@
 
     .card-wrap {
       position: relative;
-      min-height: 950px;
+      min-height: 1050px;
       height: auto;
       overflow: visible;
       touch-action: pan-y;
@@ -394,7 +394,7 @@
       }
 
       .card-wrap {
-        min-height: 980px;
+        min-height: 1080px;
       }
     }
   </style>
@@ -898,7 +898,7 @@
         item.className = "leaderboard-item";
 
         const icon =
-          index === 0 ? "👑" :
+          index === 0 ? "King Pider" :
           index === 1 ? "🥈" :
           index === 2 ? "🥉" : "🍻";
 
