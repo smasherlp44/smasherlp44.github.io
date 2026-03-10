@@ -409,6 +409,10 @@ button.nav {
     <div class="panel">
       <div class="totals">
         <div class="total-box">
+  <div class="total-label">Reiner Alkohol</div>
+  <div id="pureAlcoholTotals" class="total-value">0,00 L</div>
+</div>
+        <div class="total-box">
           <div class="total-label">Bier gesamt / heute</div>
           <div id="beerTotals" class="total-value">0 / 0</div>
         </div>
@@ -431,7 +435,7 @@ button.nav {
             <div id="profileName" class="profile-name">Alex</div>
 
             <div class="drink-section">
-              <div class="drink-title">🍺 Bier</div>
+              <div class="drink-title">Flüssigbrot</div>
               <div class="counter-grid">
                 <div class="mini-box">
                   <div class="mini-label">Gesamt</div>
@@ -465,6 +469,27 @@ button.nav {
                 <button id="removeDrinkBtn" class="drink-btn">-1 Drink</button>
               </div>
             </div>
+
+            <div class="drink-section">
+  <div class="drink-title">🥃 Shots</div>
+
+  <div class="counter-grid">
+    <div class="mini-box">
+      <div class="mini-label">Gesamt</div>
+      <div id="profileShotsAllTime" class="mini-value">0</div>
+    </div>
+
+    <div class="mini-box">
+      <div class="mini-label">Heute</div>
+      <div id="profileShotsToday" class="mini-value">0</div>
+    </div>
+  </div>
+
+  <div class="action-row">
+    <button id="addShotBtn" class="drink-btn">+1 Shot</button>
+    <button id="removeShotBtn" class="drink-btn">-1 Shot</button>
+  </div>
+</div>
 
             <div class="drink-section">
               <div class="drink-title">📏 Liter gesamt</div>
@@ -513,18 +538,22 @@ button.nav {
   </div>
 
   <script>
-    const profiles = ["Alex", "Arthur", "Micha", "Leon", "Eric"];
+    const profiles = ["Dr. Alex", "Arthur", "Micha", "Leon4ikki", "Eric"];
     const STORAGE_KEY = "bierCounterDeluxeV4";
-    const BEER_LITERS = 0.5;
-    const DRINK_LITERS = 0.33;
+  const BEER_LITERS = 0.5;
+const DRINK_LITERS = 0.33;
+const SHOT_LITERS = 0.02;
 
+const BEER_ALC = 0.052;
+const SHOT_ALC = 0.40;
     function defaultCounts() {
       return Object.fromEntries(
         profiles.map(name => [
           name,
           {
             beer: 0,
-            drinks: 0
+            drinks: 0,
+            shots: 0
           }
         ])
       );
@@ -547,14 +576,33 @@ button.nav {
       return new Date().toLocaleDateString("de-DE", { weekday: "long" });
     }
 
-    function litersForCounts(beerCount, drinkCount) {
-      return beerCount * BEER_LITERS + drinkCount * DRINK_LITERS;
-    }
+ function litersForCounts(beerCount, drinkCount, shotCount) {
+  return beerCount * BEER_LITERS +
+         drinkCount * DRINK_LITERS +
+         shotCount * SHOT_LITERS;
+}    }
 
     function formatLiters(value) {
       return `${value.toFixed(2).replace(".", ",")} L`;
     }
+function pureAlcoholForCounts(beerCount, drinkCount, shotCount) {
 
+  let drinkAlcohol = 0;
+
+  for (let i = 0; i < drinkCount; i++) {
+    const randomPercent = 0.10 + Math.random() * 0.20;
+    drinkAlcohol += DRINK_LITERS * randomPercent;
+  }
+
+  const beerAlcohol = beerCount * BEER_LITERS * BEER_ALC;
+  const shotAlcohol = shotCount * SHOT_LITERS * SHOT_ALC;
+
+  return beerAlcohol + drinkAlcohol + shotAlcohol;
+}
+
+function formatAlcohol(value) {
+  return `${value.toFixed(2).replace(".", ",")} L`;
+}
     function safeLoad() {
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
@@ -635,17 +683,38 @@ button.nav {
 
     function getProfileAlcoholToday(name) {
       return litersForCounts(
-        state.daily.counts[name].beer,
-        state.daily.counts[name].drinks
-      );
+  state.daily.counts[name].beer,
+  state.daily.counts[name].drinks,
+  state.daily.counts[name].shots
+);
     }
 
     function getProfileAlcoholAllTime(name) {
       return litersForCounts(
-        state.allTime[name].beer,
-        state.allTime[name].drinks
+  state.allTime[name].beer,
+  state.allTime[name].drinks,
+  state.allTime[name].shots
       );
     }
+    function getDailyPureAlcohol() {
+  return profiles.reduce((sum, name) => {
+    return sum + pureAlcoholForCounts(
+      state.daily.counts[name].beer,
+      state.daily.counts[name].drinks,
+      state.daily.counts[name].shots
+    );
+  }, 0);
+}
+
+function getGrandPureAlcohol() {
+  return profiles.reduce((sum, name) => {
+    return sum + pureAlcoholForCounts(
+      state.allTime[name].beer,
+      state.allTime[name].drinks,
+      state.allTime[name].shots
+    );
+  }, 0);
+}
 
     function archiveCurrentEvening(reason = "automatic") {
       const totalBeer = getDailyTotal("beer");
@@ -688,6 +757,7 @@ button.nav {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     }
 
+    const pureAlcoholTotalsEl = document.getElementById("pureAlcoholTotals");
     const beerTotalsEl = document.getElementById("beerTotals");
     const drinkTotalsEl = document.getElementById("drinkTotals");
     const alcoholTotalsEl = document.getElementById("alcoholTotals");
@@ -704,6 +774,11 @@ button.nav {
     const leaderboardEl = document.getElementById("leaderboard");
     const historyListEl = document.getElementById("historyList");
 
+    const addShotBtn = document.getElementById("addShotBtn");
+const removeShotBtn = document.getElementById("removeShotBtn");
+
+addShotBtn.addEventListener("click", () => addCount("shots"));
+removeShotBtn.addEventListener("click", () => removeCount("shots"));
     const addBeerBtn = document.getElementById("addBeerBtn");
     const removeBeerBtn = document.getElementById("removeBeerBtn");
     const addDrinkBtn = document.getElementById("addDrinkBtn");
@@ -820,6 +895,8 @@ button.nav {
     function updateUI() {
       const name = currentProfile();
 
+      pureAlcoholTotalsEl.textContent =
+  `${formatAlcohol(getGrandPureAlcohol())} / ${formatAlcohol(getDailyPureAlcohol())}`;
       beerTotalsEl.textContent = `${getGrandTotal("beer")} / ${getDailyTotal("beer")}`;
       drinkTotalsEl.textContent = `${getGrandTotal("drinks")} / ${getDailyTotal("drinks")}`;
       alcoholTotalsEl.textContent = `${formatLiters(getGrandAlcoholLiters())} / ${formatLiters(getDailyAlcoholLiters())}`;
