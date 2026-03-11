@@ -57,7 +57,7 @@
     .title {
       text-align: center;
       margin: 6px 0 14px;
-      font-size: 26px;
+      font-size: 27px;
       color: #5a3b00;
       line-height: 1.2;
     }
@@ -100,7 +100,6 @@
       font-size: 22px;
       font-weight: 800;
       word-break: break-word;
-      line-height: 1.2;
     }
 
     .date-line {
@@ -112,8 +111,7 @@
 
     .card-wrap {
       position: relative;
-      min-height: 1050px;
-      height: auto;
+      min-height: 1320px;
       overflow: visible;
       touch-action: pan-y;
     }
@@ -139,7 +137,14 @@
       font-weight: 800;
       color: #4a2f00;
       margin-top: 2px;
+      margin-bottom: 8px;
+    }
+
+    .profile-meta {
+      font-size: 13px;
+      color: #7a5a00;
       margin-bottom: 12px;
+      font-weight: 700;
     }
 
     .drink-section {
@@ -178,10 +183,9 @@
     }
 
     .mini-value {
-      font-size: 24px;
+      font-size: 25px;
       font-weight: 800;
       word-break: break-word;
-      line-height: 1.2;
     }
 
     .action-row {
@@ -191,30 +195,102 @@
       flex-wrap: wrap;
     }
 
-    button.drink-btn,
-    button.control,
-    button.nav {
+    button.drink-btn {
       border: none;
-      border-radius: 14px;
+      border-radius: 16px;
       padding: 10px 12px;
       font-size: 14px;
       cursor: pointer;
       font-weight: 800;
-    }
-
-    button.drink-btn {
       background: #f2e0a3;
       color: #5a3b00;
-      min-width: 0;
       width: calc(50% - 6px);
+      min-width: 0;
     }
 
     button.drink-btn:active {
       transform: scale(0.97);
     }
 
+    .gauge-wrap {
+      background: rgba(255,255,255,0.55);
+      border: 1px solid #ecd28f;
+      border-radius: 18px;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+
+    .gauge-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #5a3b00;
+      margin-bottom: 6px;
+    }
+
+    .gauge-subtitle {
+      font-size: 12px;
+      color: #8a6a15;
+      margin-bottom: 8px;
+      line-height: 1.35;
+    }
+
+    .gauge {
+      position: relative;
+      width: 100%;
+      max-width: 250px;
+      height: 145px;
+      margin: 0 auto 6px;
+    }
+
+    .gauge-svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .gauge-needle {
+      transform-origin: 50% 85%;
+      transition: transform 0.35s ease;
+    }
+
+    .gauge-value {
+      position: absolute;
+      left: 50%;
+      bottom: 16px;
+      transform: translateX(-50%);
+      font-size: 28px;
+      font-weight: 900;
+      color: #4a2f00;
+      line-height: 1;
+    }
+
+    .gauge-unit {
+      font-size: 13px;
+      color: #7a5a00;
+      margin-top: 2px;
+      font-weight: 700;
+    }
+
+    .gauge-scale {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: #8a6a15;
+      max-width: 250px;
+      margin: 0 auto;
+      padding: 0 4px;
+    }
+
+    .gauge-extra {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #6b6b6b;
+      line-height: 1.45;
+      text-align: center;
+    }
+
     .status {
-      min-height: 44px;
+      min-height: 40px;
       font-size: 13px;
       line-height: 1.35;
       display: flex;
@@ -223,15 +299,15 @@
       text-align: center;
       padding: 0 6px;
       color: #8a5b00;
-      font-weight: 600;
+      font-weight: 700;
     }
 
     .swipe-hint {
       font-size: 12px;
-      line-height: 1.3;
-      text-align: center;
       color: var(--muted);
       margin-top: 4px;
+      text-align: center;
+      line-height: 1.3;
     }
 
     .nav-row,
@@ -243,23 +319,35 @@
       margin-top: 12px;
     }
 
+    button.control,
+    button.nav {
+      border: none;
+      border-radius: 14px;
+      padding: 10px 12px;
+      font-size: 14px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
     button.nav {
       background: #f2e0a3;
       color: #5a3b00;
-      min-width: 0;
       width: calc(50% - 6px);
+      min-width: 0;
     }
 
     .finish-btn {
       background: var(--warning);
       color: white;
       flex: 1 1 140px;
+      min-width: 0;
     }
 
     .reset-btn {
       background: var(--danger);
       color: white;
       flex: 1 1 140px;
+      min-width: 0;
     }
 
     .dots {
@@ -381,20 +469,21 @@
         font-size: 26px;
       }
 
-      .drink-title {
+      .drink-title,
+      .gauge-title {
         font-size: 17px;
       }
 
       .mini-value {
-        font-size: 22px;
+        font-size: 23px;
       }
 
       .total-value {
-        font-size: 19px;
+        font-size: 20px;
       }
 
       .card-wrap {
-        min-height: 1080px;
+        min-height: 1360px;
       }
     }
   </style>
@@ -403,7 +492,7 @@
   <canvas id="confetti"></canvas>
 
   <div class="app">
-    <h1 class="title">🍺🍹🥃 Bier, Drinks & Shots Counter Deluxe</h1>
+    <h1 class="title">🍺🍹🥃 Counter Deluxe</h1>
 
     <div class="panel">
       <div class="totals">
@@ -421,10 +510,10 @@
         </div>
         <div class="total-box">
           <div class="total-label">Liter gesamt / heute</div>
-          <div id="literTotals" class="total-value">0,00 L / 0,00 L</div>
+          <div id="alcoholTotals" class="total-value">0,00 L / 0,00 L</div>
         </div>
         <div class="total-box">
-          <div class="total-label">Purer Alkohol gesamt / heute</div>
+          <div class="total-label">Reiner Alkohol gesamt / heute</div>
           <div id="pureAlcoholTotals" class="total-value">0,00 L / 0,00 L</div>
         </div>
       </div>
@@ -436,6 +525,84 @@
         <div id="profileCard" class="profile-card">
           <div>
             <div id="profileName" class="profile-name">Alex</div>
+            <div id="profileMeta" class="profile-meta">95 kg · 186 cm</div>
+
+            <div class="gauge-wrap">
+              <div class="gauge-title">🚗 Promille-Tacho</div>
+              <div class="gauge-subtitle">
+                Grobe Schätzung anhand von Gewicht, Größe und heutigem reinem Alkohol.
+              </div>
+
+              <div class="gauge">
+                <svg class="gauge-svg" viewBox="0 0 220 140" aria-hidden="true">
+                  <path
+                    d="M20 120 A90 90 0 0 1 200 120"
+                    fill="none"
+                    stroke="#f0d17a"
+                    stroke-width="18"
+                    stroke-linecap="round"
+                  ></path>
+
+                  <path
+                    d="M20 120 A90 90 0 0 1 80 42"
+                    fill="none"
+                    stroke="#7bc96f"
+                    stroke-width="18"
+                    stroke-linecap="round"
+                  ></path>
+                  <path
+                    d="M80 42 A90 90 0 0 1 140 42"
+                    fill="none"
+                    stroke="#f2c94c"
+                    stroke-width="18"
+                    stroke-linecap="round"
+                  ></path>
+                  <path
+                    d="M140 42 A90 90 0 0 1 176 70"
+                    fill="none"
+                    stroke="#f2994a"
+                    stroke-width="18"
+                    stroke-linecap="round"
+                  ></path>
+                  <path
+                    d="M176 70 A90 90 0 0 1 200 120"
+                    fill="none"
+                    stroke="#eb5757"
+                    stroke-width="18"
+                    stroke-linecap="round"
+                  ></path>
+
+                  <line
+                    id="gaugeNeedle"
+                    class="gauge-needle"
+                    x1="110"
+                    y1="120"
+                    x2="110"
+                    y2="38"
+                    stroke="#4a2f00"
+                    stroke-width="6"
+                    stroke-linecap="round"
+                  ></line>
+                  <circle cx="110" cy="120" r="10" fill="#4a2f00"></circle>
+                </svg>
+
+                <div id="gaugeValue" class="gauge-value">0,00
+                  <div class="gauge-unit">‰</div>
+                </div>
+              </div>
+
+              <div class="gauge-scale">
+                <span>0,0</span>
+                <span>0,5</span>
+                <span>1,0</span>
+                <span>1,5</span>
+                <span>2,0+</span>
+              </div>
+
+              <div id="gaugeExtra" class="gauge-extra">
+                Heute: 0,00 L reiner Alkohol
+              </div>
+            </div>
 
             <div class="drink-section">
               <div class="drink-title">🍺 Bier</div>
@@ -496,17 +663,17 @@
               <div class="counter-grid">
                 <div class="mini-box">
                   <div class="mini-label">Gesamt</div>
-                  <div id="profileLiterAllTime" class="mini-value">0,00 L</div>
+                  <div id="profileAlcoholAllTime" class="mini-value">0,00 L</div>
                 </div>
                 <div class="mini-box">
                   <div class="mini-label">Heute</div>
-                  <div id="profileLiterToday" class="mini-value">0,00 L</div>
+                  <div id="profileAlcoholToday" class="mini-value">0,00 L</div>
                 </div>
               </div>
             </div>
 
             <div class="drink-section">
-              <div class="drink-title">🧪 Purer Alkohol</div>
+              <div class="drink-title">🧪 Reiner Alkohol</div>
               <div class="counter-grid">
                 <div class="mini-box">
                   <div class="mini-label">Gesamt</div>
@@ -555,16 +722,22 @@
     const profiles = ["Alex", "Arthur", "Micha", "Leon", "Eric"];
     const STORAGE_KEY = "bierCounterDeluxeV5";
 
+    const PEOPLE = {
+      Alex: { weight: 95, height: 186 },
+      Arthur: { weight: 105, height: 190 },
+      Micha: { weight: 78, height: 186 },
+      Leon: { weight: 85, height: 180 },
+      Eric: { weight: 87, height: 186 }
+    };
+
     const BEER_LITERS = 0.5;
     const DRINK_LITERS = 0.33;
     const SHOT_LITERS = 0.02;
 
     const BEER_ALC = 0.052;
     const SHOT_ALC = 0.40;
-
-    function randomCocktailAlcohol() {
-      return Number((0.10 + Math.random() * 0.20).toFixed(4));
-    }
+    const DRINK_ALC_MIN = 0.10;
+    const DRINK_ALC_MAX = 0.30;
 
     function defaultCounts() {
       return Object.fromEntries(
@@ -574,7 +747,7 @@
             beer: 0,
             drinks: 0,
             shots: 0,
-            drinkAlcoholPercents: []
+            drinkAlcoholValues: []
           }
         ])
       );
@@ -598,25 +771,27 @@
     }
 
     function litersForCounts(beerCount, drinkCount, shotCount) {
-      return (
-        beerCount * BEER_LITERS +
-        drinkCount * DRINK_LITERS +
-        shotCount * SHOT_LITERS
-      );
+      return (beerCount * BEER_LITERS) + (drinkCount * DRINK_LITERS) + (shotCount * SHOT_LITERS);
     }
 
-    function pureAlcoholForCounts(beerCount, drinkAlcoholPercents, shotCount) {
-      const beerAlcohol = beerCount * BEER_LITERS * BEER_ALC;
-      const shotAlcohol = shotCount * SHOT_LITERS * SHOT_ALC;
-      const drinkAlcohol = (drinkAlcoholPercents || []).reduce((sum, pct) => {
-        return sum + DRINK_LITERS * pct;
-      }, 0);
-
+    function pureAlcoholForEntry(entry) {
+      const beerAlcohol = entry.beer * BEER_LITERS * BEER_ALC;
+      const shotAlcohol = entry.shots * SHOT_LITERS * SHOT_ALC;
+      const drinkAlcohol = (entry.drinkAlcoholValues || []).reduce((sum, value) => sum + value, 0);
       return beerAlcohol + shotAlcohol + drinkAlcohol;
     }
 
     function formatLiters(value) {
       return `${value.toFixed(2).replace(".", ",")} L`;
+    }
+
+    function formatPromille(value) {
+      return value.toFixed(2).replace(".", ",");
+    }
+
+    function randomDrinkAlcoholLiters() {
+      const percent = DRINK_ALC_MIN + Math.random() * (DRINK_ALC_MAX - DRINK_ALC_MIN);
+      return DRINK_LITERS * percent;
     }
 
     function safeLoad() {
@@ -651,34 +826,33 @@
 
     for (const name of profiles) {
       if (!state.allTime[name] || typeof state.allTime[name] !== "object") {
-        state.allTime[name] = { beer: 0, drinks: 0, shots: 0, drinkAlcoholPercents: [] };
+        state.allTime[name] = { beer: 0, drinks: 0, shots: 0, drinkAlcoholValues: [] };
       }
       if (!state.daily.counts[name] || typeof state.daily.counts[name] !== "object") {
-        state.daily.counts[name] = { beer: 0, drinks: 0, shots: 0, drinkAlcoholPercents: [] };
+        state.daily.counts[name] = { beer: 0, drinks: 0, shots: 0, drinkAlcoholValues: [] };
       }
 
       if (typeof state.allTime[name].beer !== "number") state.allTime[name].beer = 0;
       if (typeof state.allTime[name].drinks !== "number") state.allTime[name].drinks = 0;
       if (typeof state.allTime[name].shots !== "number") state.allTime[name].shots = 0;
-      if (!Array.isArray(state.allTime[name].drinkAlcoholPercents)) state.allTime[name].drinkAlcoholPercents = [];
+      if (!Array.isArray(state.allTime[name].drinkAlcoholValues)) state.allTime[name].drinkAlcoholValues = [];
 
       if (typeof state.daily.counts[name].beer !== "number") state.daily.counts[name].beer = 0;
       if (typeof state.daily.counts[name].drinks !== "number") state.daily.counts[name].drinks = 0;
       if (typeof state.daily.counts[name].shots !== "number") state.daily.counts[name].shots = 0;
-      if (!Array.isArray(state.daily.counts[name].drinkAlcoholPercents)) state.daily.counts[name].drinkAlcoholPercents = [];
+      if (!Array.isArray(state.daily.counts[name].drinkAlcoholValues)) state.daily.counts[name].drinkAlcoholValues = [];
 
-      while (state.allTime[name].drinkAlcoholPercents.length < state.allTime[name].drinks) {
-        state.allTime[name].drinkAlcoholPercents.push(randomCocktailAlcohol());
+      while (state.allTime[name].drinkAlcoholValues.length < state.allTime[name].drinks) {
+        state.allTime[name].drinkAlcoholValues.push(DRINK_LITERS * 0.20);
       }
-      if (state.allTime[name].drinkAlcoholPercents.length > state.allTime[name].drinks) {
-        state.allTime[name].drinkAlcoholPercents = state.allTime[name].drinkAlcoholPercents.slice(0, state.allTime[name].drinks);
+      while (state.daily.counts[name].drinkAlcoholValues.length < state.daily.counts[name].drinks) {
+        state.daily.counts[name].drinkAlcoholValues.push(DRINK_LITERS * 0.20);
       }
-
-      while (state.daily.counts[name].drinkAlcoholPercents.length < state.daily.counts[name].drinks) {
-        state.daily.counts[name].drinkAlcoholPercents.push(randomCocktailAlcohol());
+      if (state.allTime[name].drinkAlcoholValues.length > state.allTime[name].drinks) {
+        state.allTime[name].drinkAlcoholValues = state.allTime[name].drinkAlcoholValues.slice(0, state.allTime[name].drinks);
       }
-      if (state.daily.counts[name].drinkAlcoholPercents.length > state.daily.counts[name].drinks) {
-        state.daily.counts[name].drinkAlcoholPercents = state.daily.counts[name].drinkAlcoholPercents.slice(0, state.daily.counts[name].drinks);
+      if (state.daily.counts[name].drinkAlcoholValues.length > state.daily.counts[name].drinks) {
+        state.daily.counts[name].drinkAlcoholValues = state.daily.counts[name].drinkAlcoholValues.slice(0, state.daily.counts[name].drinks);
       }
     }
 
@@ -698,7 +872,7 @@
       return state.allTime[name].beer + state.allTime[name].drinks + state.allTime[name].shots;
     }
 
-    function getDailyLiters() {
+    function getDailyAlcoholLiters() {
       return profiles.reduce((sum, name) => {
         return sum + litersForCounts(
           state.daily.counts[name].beer,
@@ -708,7 +882,7 @@
       }, 0);
     }
 
-    function getGrandLiters() {
+    function getGrandAlcoholLiters() {
       return profiles.reduce((sum, name) => {
         return sum + litersForCounts(
           state.allTime[name].beer,
@@ -718,7 +892,7 @@
       }, 0);
     }
 
-    function getProfileLiterToday(name) {
+    function getProfileAlcoholToday(name) {
       return litersForCounts(
         state.daily.counts[name].beer,
         state.daily.counts[name].drinks,
@@ -726,7 +900,7 @@
       );
     }
 
-    function getProfileLiterAllTime(name) {
+    function getProfileAlcoholAllTime(name) {
       return litersForCounts(
         state.allTime[name].beer,
         state.allTime[name].drinks,
@@ -734,47 +908,68 @@
       );
     }
 
-    function getDailyPureAlcohol() {
-      return profiles.reduce((sum, name) => {
-        return sum + pureAlcoholForCounts(
-          state.daily.counts[name].beer,
-          state.daily.counts[name].drinkAlcoholPercents,
-          state.daily.counts[name].shots
-        );
-      }, 0);
-    }
-
-    function getGrandPureAlcohol() {
-      return profiles.reduce((sum, name) => {
-        return sum + pureAlcoholForCounts(
-          state.allTime[name].beer,
-          state.allTime[name].drinkAlcoholPercents,
-          state.allTime[name].shots
-        );
-      }, 0);
-    }
-
     function getProfilePureAlcoholToday(name) {
-      return pureAlcoholForCounts(
-        state.daily.counts[name].beer,
-        state.daily.counts[name].drinkAlcoholPercents,
-        state.daily.counts[name].shots
-      );
+      return pureAlcoholForEntry(state.daily.counts[name]);
     }
 
     function getProfilePureAlcoholAllTime(name) {
-      return pureAlcoholForCounts(
-        state.allTime[name].beer,
-        state.allTime[name].drinkAlcoholPercents,
-        state.allTime[name].shots
-      );
+      return pureAlcoholForEntry(state.allTime[name]);
+    }
+
+    function getDailyPureAlcohol() {
+      return profiles.reduce((sum, name) => sum + getProfilePureAlcoholToday(name), 0);
+    }
+
+    function getGrandPureAlcohol() {
+      return profiles.reduce((sum, name) => sum + getProfilePureAlcoholAllTime(name), 0);
+    }
+
+    function clamp(value, min, max) {
+      return Math.min(max, Math.max(min, value));
+    }
+
+    function estimateDistributionFactor(weightKg, heightCm) {
+      const heightM = heightCm / 100;
+      const bmi = weightKg / (heightM * heightM);
+
+      let factor = 0.68;
+      factor -= Math.max(0, bmi - 25) * 0.004;
+      factor += Math.max(0, heightCm - 180) * 0.001;
+      factor -= Math.max(0, 175 - heightCm) * 0.001;
+
+      return clamp(factor, 0.58, 0.73);
+    }
+
+    function calculatePromille(name) {
+      const person = PEOPLE[name];
+      const pureAlcoholLiters = getProfilePureAlcoholToday(name);
+      const alcoholGrams = pureAlcoholLiters * 1000 * 0.789;
+
+      const distributionFactor = estimateDistributionFactor(person.weight, person.height);
+      const promille = alcoholGrams / (person.weight * distributionFactor);
+
+      return Math.max(0, promille);
+    }
+
+    function gaugeRotationFromPromille(promille) {
+      const maxPromille = 2.0;
+      const normalized = clamp(promille / maxPromille, 0, 1);
+      return -90 + (normalized * 180);
+    }
+
+    function getPromilleStatusText(promille) {
+      if (promille < 0.3) return "Locker unterwegs.";
+      if (promille < 0.8) return "Schon deutlich was drin.";
+      if (promille < 1.3) return "Jetzt wird's ordentlich.";
+      if (promille < 2.0) return "Sehr stabil unterwegs.";
+      return "Komplett Endgegner-Modus.";
     }
 
     function archiveCurrentEvening(reason = "automatic") {
       const totalBeer = getDailyTotal("beer");
       const totalDrinks = getDailyTotal("drinks");
       const totalShots = getDailyTotal("shots");
-      const totalLiters = getDailyLiters();
+      const totalLiters = getDailyAlcoholLiters();
       const totalPureAlcohol = getDailyPureAlcohol();
       const total = totalBeer + totalDrinks + totalShots;
 
@@ -818,21 +1013,31 @@
     const beerTotalsEl = document.getElementById("beerTotals");
     const drinkTotalsEl = document.getElementById("drinkTotals");
     const shotTotalsEl = document.getElementById("shotTotals");
-    const literTotalsEl = document.getElementById("literTotals");
+    const alcoholTotalsEl = document.getElementById("alcoholTotals");
     const pureAlcoholTotalsEl = document.getElementById("pureAlcoholTotals");
     const dateLineEl = document.getElementById("dateLine");
 
     const profileNameEl = document.getElementById("profileName");
+    const profileMetaEl = document.getElementById("profileMeta");
+
     const profileBeerAllTimeEl = document.getElementById("profileBeerAllTime");
     const profileBeerTodayEl = document.getElementById("profileBeerToday");
+
     const profileDrinksAllTimeEl = document.getElementById("profileDrinksAllTime");
     const profileDrinksTodayEl = document.getElementById("profileDrinksToday");
+
     const profileShotsAllTimeEl = document.getElementById("profileShotsAllTime");
     const profileShotsTodayEl = document.getElementById("profileShotsToday");
-    const profileLiterAllTimeEl = document.getElementById("profileLiterAllTime");
-    const profileLiterTodayEl = document.getElementById("profileLiterToday");
+
+    const profileAlcoholAllTimeEl = document.getElementById("profileAlcoholAllTime");
+    const profileAlcoholTodayEl = document.getElementById("profileAlcoholToday");
+
     const profilePureAlcoholAllTimeEl = document.getElementById("profilePureAlcoholAllTime");
     const profilePureAlcoholTodayEl = document.getElementById("profilePureAlcoholToday");
+
+    const gaugeNeedleEl = document.getElementById("gaugeNeedle");
+    const gaugeValueEl = document.getElementById("gaugeValue");
+    const gaugeExtraEl = document.getElementById("gaugeExtra");
 
     const statusTextEl = document.getElementById("statusText");
     const dotsEl = document.getElementById("dots");
@@ -857,23 +1062,32 @@
       return profiles[state.currentIndex];
     }
 
+    function updateGauge() {
+      const name = currentProfile();
+      const promille = calculatePromille(name);
+      const rotation = gaugeRotationFromPromille(promille);
+      const pureAlcoholToday = getProfilePureAlcoholToday(name);
+
+      gaugeNeedleEl.style.transform = `rotate(${rotation}deg)`;
+      gaugeValueEl.innerHTML = `${formatPromille(promille)}<div class="gauge-unit">‰</div>`;
+      gaugeExtraEl.innerHTML = `Heute: ${formatLiters(pureAlcoholToday)} reiner Alkohol<br>${getPromilleStatusText(promille)}`;
+    }
+
     function updateStatus() {
       const name = currentProfile();
       const beerToday = state.daily.counts[name].beer;
       const drinksToday = state.daily.counts[name].drinks;
       const shotsToday = state.daily.counts[name].shots;
-      const litersToday = getProfileLiterToday(name);
+      const litersToday = getProfileAlcoholToday(name);
       const pureToday = getProfilePureAlcoholToday(name);
+      const promille = calculatePromille(name);
       const totalToday = beerToday + drinksToday + shotsToday;
 
-      if (totalToday >= 10) {
-        statusTextEl.textContent = `${name} ist heute stabil unterwegs. ${formatLiters(litersToday)} · pur: ${formatLiters(pureToday)}`;
-      } else if (totalToday >= 5) {
-        statusTextEl.textContent = `Läuft bei ${name}: ${beerToday} Bier, ${drinksToday} Drinks, ${shotsToday} Shots · ${formatLiters(litersToday)}`;
-      } else if (totalToday === 0) {
+      if (totalToday === 0) {
         statusTextEl.textContent = "Noch nüchtern heute.";
       } else {
-        statusTextEl.textContent = `${name}: ${beerToday} Bier · ${drinksToday} Drinks · ${shotsToday} Shots · ${formatLiters(litersToday)}`;
+        statusTextEl.textContent =
+          `${name}: ${beerToday} Bier · ${drinksToday} Drinks · ${shotsToday} Shots · ${formatLiters(litersToday)} · ${formatLiters(pureToday)} rein · ca. ${formatPromille(promille)}‰`;
       }
     }
 
@@ -898,7 +1112,7 @@
         item.className = "leaderboard-item";
 
         const icon =
-          index === 0 ? "King Pider" :
+          index === 0 ? "👑" :
           index === 1 ? "🥈" :
           index === 2 ? "🥉" : "🍻";
 
@@ -914,8 +1128,9 @@
             🍺 Bier: ${state.allTime[name].beer} gesamt / ${state.daily.counts[name].beer} heute<br>
             🍹 Drinks: ${state.allTime[name].drinks} gesamt / ${state.daily.counts[name].drinks} heute<br>
             🥃 Shots: ${state.allTime[name].shots} gesamt / ${state.daily.counts[name].shots} heute<br>
-            📏 Liter: ${formatLiters(getProfileLiterAllTime(name))} gesamt / ${formatLiters(getProfileLiterToday(name))} heute<br>
-            🧪 Pur: ${formatLiters(getProfilePureAlcoholAllTime(name))} gesamt / ${formatLiters(getProfilePureAlcoholToday(name))} heute
+            📏 Liter: ${formatLiters(getProfileAlcoholAllTime(name))} gesamt / ${formatLiters(getProfileAlcoholToday(name))} heute<br>
+            🧪 Reiner Alkohol: ${formatLiters(getProfilePureAlcoholAllTime(name))} gesamt / ${formatLiters(getProfilePureAlcoholToday(name))} heute<br>
+            🚗 Promille heute: ca. ${formatPromille(calculatePromille(name))}‰
           </div>
         `;
 
@@ -940,11 +1155,14 @@
             const beer = entry.counts[name]?.beer || 0;
             const drinks = entry.counts[name]?.drinks || 0;
             const shots = entry.counts[name]?.shots || 0;
-            const drinkAlcoholPercents = entry.counts[name]?.drinkAlcoholPercents || [];
             const liters = litersForCounts(beer, drinks, shots);
-            const pureAlcohol = pureAlcoholForCounts(beer, drinkAlcoholPercents, shots);
 
-            return `${name}: 🍺 ${beer} · 🍹 ${drinks} · 🥃 ${shots} · 📏 ${formatLiters(liters)} · 🧪 ${formatLiters(pureAlcohol)}`;
+            const entryPureAlcohol =
+              (beer * BEER_LITERS * BEER_ALC) +
+              (shots * SHOT_LITERS * SHOT_ALC) +
+              ((entry.counts[name]?.drinkAlcoholValues || []).reduce((sum, value) => sum + value, 0));
+
+            return `${name}: 🍺 ${beer} · 🍹 ${drinks} · 🥃 ${shots} · 📏 ${formatLiters(liters)} · 🧪 ${formatLiters(entryPureAlcohol)}`;
           })
           .join("<br>");
 
@@ -952,9 +1170,9 @@
           <div class="history-date">${entry.label}</div>
           <div class="history-total">
             Gesamt an diesem Abend: <strong>${entry.total}</strong><br>
-            🍺 Bier: <strong>${entry.totalBeer}</strong> · 🍹 Drinks: <strong>${entry.totalDrinks}</strong> · 🥃 Shots: <strong>${entry.totalShots || 0}</strong><br>
+            🍺 Bier: <strong>${entry.totalBeer}</strong> · 🍹 Drinks: <strong>${entry.totalDrinks}</strong> · 🥃 Shots: <strong>${entry.totalShots}</strong><br>
             📏 Liter: <strong>${formatLiters(entry.totalLiters || 0)}</strong><br>
-            🧪 Purer Alkohol: <strong>${formatLiters(entry.totalPureAlcohol || 0)}</strong>
+            🧪 Reiner Alkohol: <strong>${formatLiters(entry.totalPureAlcohol || 0)}</strong>
           </div>
           <div class="history-breakdown">${breakdown}</div>
         `;
@@ -965,26 +1183,34 @@
 
     function updateUI() {
       const name = currentProfile();
+      const person = PEOPLE[name];
 
       beerTotalsEl.textContent = `${getGrandTotal("beer")} / ${getDailyTotal("beer")}`;
       drinkTotalsEl.textContent = `${getGrandTotal("drinks")} / ${getDailyTotal("drinks")}`;
       shotTotalsEl.textContent = `${getGrandTotal("shots")} / ${getDailyTotal("shots")}`;
-      literTotalsEl.textContent = `${formatLiters(getGrandLiters())} / ${formatLiters(getDailyLiters())}`;
+      alcoholTotalsEl.textContent = `${formatLiters(getGrandAlcoholLiters())} / ${formatLiters(getDailyAlcoholLiters())}`;
       pureAlcoholTotalsEl.textContent = `${formatLiters(getGrandPureAlcohol())} / ${formatLiters(getDailyPureAlcohol())}`;
       dateLineEl.textContent = `${getGermanWeekday()} · ${formatDateGerman(getTodayKey())}`;
 
       profileNameEl.textContent = name;
+      profileMetaEl.textContent = `${person.weight} kg · ${person.height} cm`;
+
       profileBeerAllTimeEl.textContent = state.allTime[name].beer;
       profileBeerTodayEl.textContent = state.daily.counts[name].beer;
+
       profileDrinksAllTimeEl.textContent = state.allTime[name].drinks;
       profileDrinksTodayEl.textContent = state.daily.counts[name].drinks;
+
       profileShotsAllTimeEl.textContent = state.allTime[name].shots;
       profileShotsTodayEl.textContent = state.daily.counts[name].shots;
-      profileLiterAllTimeEl.textContent = formatLiters(getProfileLiterAllTime(name));
-      profileLiterTodayEl.textContent = formatLiters(getProfileLiterToday(name));
+
+      profileAlcoholAllTimeEl.textContent = formatLiters(getProfileAlcoholAllTime(name));
+      profileAlcoholTodayEl.textContent = formatLiters(getProfileAlcoholToday(name));
+
       profilePureAlcoholAllTimeEl.textContent = formatLiters(getProfilePureAlcoholAllTime(name));
       profilePureAlcoholTodayEl.textContent = formatLiters(getProfilePureAlcoholToday(name));
 
+      updateGauge();
       updateStatus();
       renderDots();
       renderLeaderboard();
@@ -1013,9 +1239,9 @@
       state.daily.counts[name][type] += 1;
 
       if (type === "drinks") {
-        const randomPct = randomCocktailAlcohol();
-        state.allTime[name].drinkAlcoholPercents.push(randomPct);
-        state.daily.counts[name].drinkAlcoholPercents.push(randomPct);
+        const alcoholValue = randomDrinkAlcoholLiters();
+        state.allTime[name].drinkAlcoholValues.push(alcoholValue);
+        state.daily.counts[name].drinkAlcoholValues.push(alcoholValue);
       }
 
       updateUI();
@@ -1033,8 +1259,8 @@
       state.allTime[name][type] -= 1;
 
       if (type === "drinks") {
-        state.daily.counts[name].drinkAlcoholPercents.pop();
-        state.allTime[name].drinkAlcoholPercents.pop();
+        state.daily.counts[name].drinkAlcoholValues.pop();
+        state.allTime[name].drinkAlcoholValues.pop();
       }
 
       updateUI();
@@ -1061,8 +1287,10 @@
 
     addBeerBtn.addEventListener("click", () => addCount("beer"));
     removeBeerBtn.addEventListener("click", () => removeCount("beer"));
+
     addDrinkBtn.addEventListener("click", () => addCount("drinks"));
     removeDrinkBtn.addEventListener("click", () => removeCount("drinks"));
+
     addShotBtn.addEventListener("click", () => addCount("shots"));
     removeShotBtn.addEventListener("click", () => removeCount("shots"));
 
