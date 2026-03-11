@@ -111,7 +111,7 @@
 
     .card-wrap {
       position: relative;
-      min-height: 1420px;
+      min-height: 1520px;
       overflow: visible;
       touch-action: pan-y;
     }
