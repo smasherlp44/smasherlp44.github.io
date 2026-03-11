@@ -111,7 +111,7 @@
 
     .card-wrap {
       position: relative;
-      min-height: 1320px;
+      min-height: 1420px;
       overflow: visible;
       touch-action: pan-y;
     }
@@ -497,7 +497,7 @@
     <div class="panel">
       <div class="totals">
         <div class="total-box">
-          <div class="total-label">Bier gesamt / heute</div>
+          <div class="total-label">пиво gesamt / heute</div>
           <div id="beerTotals" class="total-value">0 / 0</div>
         </div>
         <div class="total-box">
@@ -505,7 +505,7 @@
           <div id="drinkTotals" class="total-value">0 / 0</div>
         </div>
         <div class="total-box">
-          <div class="total-label">Shots gesamt / heute</div>
+          <div class="total-label">stopki gesamt / heute</div>
           <div id="shotTotals" class="total-value">0 / 0</div>
         </div>
         <div class="total-box">
@@ -530,7 +530,7 @@
             <div class="gauge-wrap">
               <div class="gauge-title">🚗 Promille-Tacho</div>
               <div class="gauge-subtitle">
-                Grobe Schätzung anhand von Gewicht, Größe und heutigem reinem Alkohol.
+               Wird schon ungefähr passen wenn ich richtig geschätzt habe
               </div>
 
               <div class="gauge">
@@ -605,7 +605,7 @@
             </div>
 
             <div class="drink-section">
-              <div class="drink-title">🍺 Bier</div>
+              <div class="drink-title">🍺 пиво</div>
               <div class="counter-grid">
                 <div class="mini-box">
                   <div class="mini-label">Gesamt</div>
@@ -617,8 +617,8 @@
                 </div>
               </div>
               <div class="action-row">
-                <button id="addBeerBtn" class="drink-btn">+1 Bier</button>
-                <button id="removeBeerBtn" class="drink-btn">-1 Bier</button>
+                <button id="addBeerBtn" class="drink-btn">+1 пиво</button>
+                <button id="removeBeerBtn" class="drink-btn">-1 пиво</button>
               </div>
             </div>
 
@@ -641,7 +641,7 @@
             </div>
 
             <div class="drink-section">
-              <div class="drink-title">🥃 Shots</div>
+              <div class="drink-title">🥃 stopki</div>
               <div class="counter-grid">
                 <div class="mini-box">
                   <div class="mini-label">Gesamt</div>
@@ -653,8 +653,8 @@
                 </div>
               </div>
               <div class="action-row">
-                <button id="addShotBtn" class="drink-btn">+1 Shot</button>
-                <button id="removeShotBtn" class="drink-btn">-1 Shot</button>
+                <button id="addShotBtn" class="drink-btn">+1 stopka</button>
+                <button id="removeShotBtn" class="drink-btn">-1 stopka</button>
               </div>
             </div>
 
@@ -702,8 +702,8 @@
       </div>
 
       <div class="button-row">
-        <button id="finishEveningBtn" class="control finish-btn">Abend abschließen</button>
-        <button id="resetAllBtn" class="control reset-btn">Alles reset</button>
+        <button id="finishEveningBtn" class="control finish-btn">Gute Nacht jungs</button>
+        <button id="resetAllBtn" class="control reset-btn">RESET/NEUER URLAUB</button>
       </div>
     </div>
 
@@ -719,7 +719,7 @@
   </div>
 
   <script>
-    const profiles = ["Alex", "Arthur", "Micha", "Leon", "Eric"];
+    const profiles = ["<Dr. Alex", "A(r)gurez", "Micha", "Leon4ikkki", "Eric"];
     const STORAGE_KEY = "bierCounterDeluxeV5";
 
     const PEOPLE = {
@@ -1112,9 +1112,9 @@
         item.className = "leaderboard-item";
 
         const icon =
-          index === 0 ? "👑" :
+          index === 0 ? "пидер" :
           index === 1 ? "🥈" :
-          index === 2 ? "🥉" : "🍻";
+          index === 2 ? "🥉" : "schwach";
 
         item.innerHTML = `
           <div class="leaderboard-top">
@@ -1125,9 +1125,9 @@
             <div>${getCombinedAllTimeForProfile(name)} gesamt</div>
           </div>
           <div class="leaderboard-sub">
-            🍺 Bier: ${state.allTime[name].beer} gesamt / ${state.daily.counts[name].beer} heute<br>
+            🍺 пиво: ${state.allTime[name].beer} gesamt / ${state.daily.counts[name].beer} heute<br>
             🍹 Drinks: ${state.allTime[name].drinks} gesamt / ${state.daily.counts[name].drinks} heute<br>
-            🥃 Shots: ${state.allTime[name].shots} gesamt / ${state.daily.counts[name].shots} heute<br>
+            🥃 Stopki: ${state.allTime[name].shots} gesamt / ${state.daily.counts[name].shots} heute<br>
             📏 Liter: ${formatLiters(getProfileAlcoholAllTime(name))} gesamt / ${formatLiters(getProfileAlcoholToday(name))} heute<br>
             🧪 Reiner Alkohol: ${formatLiters(getProfilePureAlcoholAllTime(name))} gesamt / ${formatLiters(getProfilePureAlcoholToday(name))} heute<br>
             🚗 Promille heute: ca. ${formatPromille(calculatePromille(name))}‰
@@ -1170,7 +1170,7 @@
           <div class="history-date">${entry.label}</div>
           <div class="history-total">
             Gesamt an diesem Abend: <strong>${entry.total}</strong><br>
-            🍺 Bier: <strong>${entry.totalBeer}</strong> · 🍹 Drinks: <strong>${entry.totalDrinks}</strong> · 🥃 Shots: <strong>${entry.totalShots}</strong><br>
+            🍺 пиво: <strong>${entry.totalBeer}</strong> · 🍹 Drinks: <strong>${entry.totalDrinks}</strong> · 🥃 Stopki: <strong>${entry.totalShots}</strong><br>
             📏 Liter: <strong>${formatLiters(entry.totalLiters || 0)}</strong><br>
             🧪 Reiner Alkohol: <strong>${formatLiters(entry.totalPureAlcohol || 0)}</strong>
           </div>
@@ -1279,7 +1279,7 @@
     }
 
     function resetAll() {
-      const ok = confirm("Wirklich alles zurücksetzen? Gesamtstände, Tagesstände und Abend-Statistik werden gelöscht.");
+      const ok = confirm("Ich hoffe wir werden diesen Abend niemals vergessen, bis zum nächsten mal Jungs");
       if (!ok) return;
       state = getFreshState();
       updateUI();
