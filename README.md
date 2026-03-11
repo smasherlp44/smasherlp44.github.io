@@ -10,7 +10,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="theme-color" content="#f3c969" />
   <link rel="apple-touch-icon" href="icon-180.png" />
-  <title>Bier, Drinks & Shots Counter Deluxe</title>
+  <title>🍺🍹🥃 Counter Deluxe</title>
 
   <style>
     * {
@@ -289,6 +289,17 @@
       text-align: center;
     }
 
+    .metabolism-box {
+      margin-top: 10px;
+      background: rgba(255,255,255,0.85);
+      border-radius: 14px;
+      border: 1px solid #edd38f;
+      padding: 10px;
+      font-size: 13px;
+      line-height: 1.45;
+      color: #6b6b6b;
+    }
+
     .status {
       min-height: 40px;
       font-size: 13px;
@@ -483,7 +494,7 @@
       }
 
       .card-wrap {
-        min-height: 1360px;
+        min-height: 1460px;
       }
     }
   </style>
@@ -505,7 +516,7 @@
           <div id="drinkTotals" class="total-value">0 / 0</div>
         </div>
         <div class="total-box">
-          <div class="total-label">stopki gesamt / heute</div>
+          <div class="total-label">стопки gesamt / heute</div>
           <div id="shotTotals" class="total-value">0 / 0</div>
         </div>
         <div class="total-box">
@@ -524,13 +535,13 @@
       <div id="cardWrap" class="card-wrap">
         <div id="profileCard" class="profile-card">
           <div>
-            <div id="profileName" class="profile-name">Alex</div>
+            <div id="profileName" class="profile-name">Dr. Alex</div>
             <div id="profileMeta" class="profile-meta">95 kg · 186 cm</div>
 
             <div class="gauge-wrap">
               <div class="gauge-title">🚗 Promille-Tacho</div>
               <div class="gauge-subtitle">
-               Wird schon ungefähr passen wenn ich richtig geschätzt habe
+                Schätzung mit Gewicht, Größe, Zeitstempeln und laufendem Alkoholabbau.
               </div>
 
               <div class="gauge">
@@ -600,7 +611,11 @@
               </div>
 
               <div id="gaugeExtra" class="gauge-extra">
-                Heute: 0,00 L reiner Alkohol
+                Aktiv: 0,00 L reiner Alkohol
+              </div>
+
+              <div id="metabolismBox" class="metabolism-box">
+                Abbau läuft...
               </div>
             </div>
 
@@ -641,7 +656,7 @@
             </div>
 
             <div class="drink-section">
-              <div class="drink-title">🥃 stopki</div>
+              <div class="drink-title">🥃 стопки</div>
               <div class="counter-grid">
                 <div class="mini-box">
                   <div class="mini-label">Gesamt</div>
@@ -653,8 +668,8 @@
                 </div>
               </div>
               <div class="action-row">
-                <button id="addShotBtn" class="drink-btn">+1 stopka</button>
-                <button id="removeShotBtn" class="drink-btn">-1 stopka</button>
+                <button id="addShotBtn" class="drink-btn">+1 стопка</button>
+                <button id="removeShotBtn" class="drink-btn">-1 стопка</button>
               </div>
             </div>
 
@@ -680,7 +695,7 @@
                   <div id="profilePureAlcoholAllTime" class="mini-value">0,00 L</div>
                 </div>
                 <div class="mini-box">
-                  <div class="mini-label">Heute</div>
+                  <div class="mini-label">Heute brutto</div>
                   <div id="profilePureAlcoholToday" class="mini-value">0,00 L</div>
                 </div>
               </div>
@@ -702,8 +717,8 @@
       </div>
 
       <div class="button-row">
-        <button id="finishEveningBtn" class="control finish-btn">Gute Nacht jungs</button>
-        <button id="resetAllBtn" class="control reset-btn">RESET/NEUER URLAUB</button>
+        <button id="finishEveningBtn" class="control finish-btn">Abend abschließen</button>
+        <button id="resetAllBtn" class="control reset-btn">Alles reset</button>
       </div>
     </div>
 
@@ -719,15 +734,23 @@
   </div>
 
   <script>
-    const profiles = ["<Dr. Alex", "A(r)gurez", "Micha", "Leon4ikkki", "Eric"];
-    const STORAGE_KEY = "bierCounterDeluxeV5";
+    const profiles = ["Dr. Alex", "Agurchik", "Micha", "leon4ikki", "Eric"];
+    const STORAGE_KEY = "bierCounterDeluxeV6";
+
+    const NAME_MIGRATION = {
+      "Alex": "Dr. Alex",
+      "Arthur": "Agurchik",
+      "Leon": "leon4ikki",
+      "Micha": "Micha",
+      "Eric": "Eric"
+    };
 
     const PEOPLE = {
-      Alex: { weight: 95, height: 186 },
-      Arthur: { weight: 105, height: 190 },
-      Micha: { weight: 78, height: 186 },
-      Leon: { weight: 85, height: 180 },
-      Eric: { weight: 87, height: 186 }
+      "Dr. Alex": { weight: 95, height: 186 },
+      "Agurchik": { weight: 105, height: 190 },
+      "Micha": { weight: 78, height: 186 },
+      "leon4ikki": { weight: 85, height: 180 },
+      "Eric": { weight: 87, height: 186 }
     };
 
     const BEER_LITERS = 0.5;
@@ -738,6 +761,9 @@
     const SHOT_ALC = 0.40;
     const DRINK_ALC_MIN = 0.10;
     const DRINK_ALC_MAX = 0.30;
+
+    const ALCOHOL_DENSITY = 0.789;
+    const ELIMINATION_PROMILLE_PER_HOUR = 0.15;
 
     function defaultCounts() {
       return Object.fromEntries(
@@ -750,6 +776,12 @@
             drinkAlcoholValues: []
           }
         ])
+      );
+    }
+
+    function defaultEvents() {
+      return Object.fromEntries(
+        profiles.map(name => [name, []])
       );
     }
 
@@ -789,6 +821,21 @@
       return value.toFixed(2).replace(".", ",");
     }
 
+    function formatTime(ts) {
+      return new Date(ts).toLocaleTimeString("de-DE", {
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
+
+    function formatMinutes(mins) {
+      if (!isFinite(mins) || mins <= 0) return "0 Min.";
+      if (mins < 60) return `${Math.ceil(mins)} Min.`;
+      const hours = Math.floor(mins / 60);
+      const rest = Math.ceil(mins % 60);
+      return rest === 60 ? `${hours + 1} Std.` : `${hours} Std. ${rest} Min.`;
+    }
+
     function randomDrinkAlcoholLiters() {
       const percent = DRINK_ALC_MIN + Math.random() * (DRINK_ALC_MAX - DRINK_ALC_MIN);
       return DRINK_LITERS * percent;
@@ -797,8 +844,12 @@
     function safeLoad() {
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return null;
-        return JSON.parse(raw);
+        if (raw) return JSON.parse(raw);
+
+        const oldRaw = localStorage.getItem("bierCounterDeluxeV5");
+        if (oldRaw) return JSON.parse(oldRaw);
+
+        return null;
       } catch {
         return null;
       }
@@ -810,17 +861,58 @@
         allTime: defaultCounts(),
         daily: {
           dateKey: getTodayKey(),
-          counts: defaultCounts()
+          counts: defaultCounts(),
+          events: defaultEvents()
         },
         history: []
       };
     }
 
-    let state = safeLoad() || getFreshState();
+    function renameKeys(obj) {
+      const out = {};
+      for (const key in obj || {}) {
+        const newKey = NAME_MIGRATION[key] || key;
+        out[newKey] = obj[key];
+      }
+      return out;
+    }
+
+    function migrateStateNames(rawState) {
+      if (!rawState) return null;
+
+      if (rawState.allTime) rawState.allTime = renameKeys(rawState.allTime);
+
+      if (rawState.daily?.counts) {
+        rawState.daily.counts = renameKeys(rawState.daily.counts);
+      }
+
+      if (rawState.daily?.events) {
+        rawState.daily.events = renameKeys(rawState.daily.events);
+      }
+
+      if (Array.isArray(rawState.history)) {
+        rawState.history = rawState.history.map(entry => {
+          if (entry.counts) entry.counts = renameKeys(entry.counts);
+          if (entry.events) entry.events = renameKeys(entry.events);
+          return entry;
+        });
+      }
+
+      return rawState;
+    }
+
+    let state = migrateStateNames(safeLoad()) || getFreshState();
 
     if (!state.allTime) state.allTime = defaultCounts();
-    if (!state.daily) state.daily = { dateKey: getTodayKey(), counts: defaultCounts() };
+    if (!state.daily) {
+      state.daily = {
+        dateKey: getTodayKey(),
+        counts: defaultCounts(),
+        events: defaultEvents()
+      };
+    }
     if (!state.daily.counts) state.daily.counts = defaultCounts();
+    if (!state.daily.events) state.daily.events = defaultEvents();
     if (!Array.isArray(state.history)) state.history = [];
     if (typeof state.currentIndex !== "number") state.currentIndex = 0;
 
@@ -830,6 +922,9 @@
       }
       if (!state.daily.counts[name] || typeof state.daily.counts[name] !== "object") {
         state.daily.counts[name] = { beer: 0, drinks: 0, shots: 0, drinkAlcoholValues: [] };
+      }
+      if (!Array.isArray(state.daily.events[name])) {
+        state.daily.events[name] = [];
       }
 
       if (typeof state.allTime[name].beer !== "number") state.allTime[name].beer = 0;
@@ -848,11 +943,16 @@
       while (state.daily.counts[name].drinkAlcoholValues.length < state.daily.counts[name].drinks) {
         state.daily.counts[name].drinkAlcoholValues.push(DRINK_LITERS * 0.20);
       }
+
       if (state.allTime[name].drinkAlcoholValues.length > state.allTime[name].drinks) {
         state.allTime[name].drinkAlcoholValues = state.allTime[name].drinkAlcoholValues.slice(0, state.allTime[name].drinks);
       }
       if (state.daily.counts[name].drinkAlcoholValues.length > state.daily.counts[name].drinks) {
         state.daily.counts[name].drinkAlcoholValues = state.daily.counts[name].drinkAlcoholValues.slice(0, state.daily.counts[name].drinks);
+      }
+
+      for (const evt of state.daily.events[name]) {
+        if (!evt.timestamp) evt.timestamp = Date.now();
       }
     }
 
@@ -940,14 +1040,62 @@
       return clamp(factor, 0.58, 0.73);
     }
 
+    function getEliminationGramsPerHour(name) {
+      const person = PEOPLE[name];
+      const r = estimateDistributionFactor(person.weight, person.height);
+      return ELIMINATION_PROMILLE_PER_HOUR * person.weight * r;
+    }
+
+    function getEventTypeLabel(type) {
+      if (type === "beer") return "пиво";
+      if (type === "drink") return "Drink";
+      if (type === "shot") return "стопка";
+      return type;
+    }
+
+    function getActiveAlcoholStats(name) {
+      const events = state.daily.events[name] || [];
+      const eliminationPerHour = getEliminationGramsPerHour(name);
+      const now = Date.now();
+
+      let activeGrams = 0;
+      let nextZeroMinutes = 0;
+      let lastDrinkTime = null;
+      let activeCount = 0;
+
+      for (const evt of events) {
+        const grams = evt.pureAlcoholLiters * 1000 * ALCOHOL_DENSITY;
+        const hoursPassed = Math.max(0, (now - evt.timestamp) / 3600000);
+        const remainingGrams = Math.max(0, grams - (eliminationPerHour * hoursPassed));
+
+        if (remainingGrams > 0) {
+          activeGrams += remainingGrams;
+          activeCount += 1;
+
+          const hoursUntilZero = remainingGrams / eliminationPerHour;
+          const minutesUntilZero = hoursUntilZero * 60;
+          if (minutesUntilZero > nextZeroMinutes) nextZeroMinutes = minutesUntilZero;
+        }
+
+        if (!lastDrinkTime || evt.timestamp > lastDrinkTime) {
+          lastDrinkTime = evt.timestamp;
+        }
+      }
+
+      return {
+        activeGrams,
+        activePureAlcoholLiters: activeGrams / (1000 * ALCOHOL_DENSITY),
+        timeUntilZeroMinutes: nextZeroMinutes,
+        lastDrinkTime,
+        activeCount
+      };
+    }
+
     function calculatePromille(name) {
       const person = PEOPLE[name];
-      const pureAlcoholLiters = getProfilePureAlcoholToday(name);
-      const alcoholGrams = pureAlcoholLiters * 1000 * 0.789;
-
+      const active = getActiveAlcoholStats(name);
       const distributionFactor = estimateDistributionFactor(person.weight, person.height);
-      const promille = alcoholGrams / (person.weight * distributionFactor);
-
+      const promille = active.activeGrams / (person.weight * distributionFactor);
       return Math.max(0, promille);
     }
 
@@ -976,7 +1124,8 @@
       if (total <= 0) {
         state.daily = {
           dateKey: getTodayKey(),
-          counts: defaultCounts()
+          counts: defaultCounts(),
+          events: defaultEvents()
         };
         return;
       }
@@ -986,6 +1135,7 @@
         dateKey: state.daily.dateKey,
         label: `${formatDateGerman(state.daily.dateKey)} · ${reason === "manual" ? "manuell abgeschlossen" : "automatisch gespeichert"}`,
         counts: JSON.parse(JSON.stringify(state.daily.counts)),
+        events: JSON.parse(JSON.stringify(state.daily.events)),
         totalBeer,
         totalDrinks,
         totalShots,
@@ -998,7 +1148,8 @@
 
       state.daily = {
         dateKey: getTodayKey(),
-        counts: defaultCounts()
+        counts: defaultCounts(),
+        events: defaultEvents()
       };
     }
 
@@ -1038,6 +1189,7 @@
     const gaugeNeedleEl = document.getElementById("gaugeNeedle");
     const gaugeValueEl = document.getElementById("gaugeValue");
     const gaugeExtraEl = document.getElementById("gaugeExtra");
+    const metabolismBoxEl = document.getElementById("metabolismBox");
 
     const statusTextEl = document.getElementById("statusText");
     const dotsEl = document.getElementById("dots");
@@ -1066,11 +1218,29 @@
       const name = currentProfile();
       const promille = calculatePromille(name);
       const rotation = gaugeRotationFromPromille(promille);
-      const pureAlcoholToday = getProfilePureAlcoholToday(name);
+      const activeStats = getActiveAlcoholStats(name);
 
       gaugeNeedleEl.style.transform = `rotate(${rotation}deg)`;
       gaugeValueEl.innerHTML = `${formatPromille(promille)}<div class="gauge-unit">‰</div>`;
-      gaugeExtraEl.innerHTML = `Heute: ${formatLiters(pureAlcoholToday)} reiner Alkohol<br>${getPromilleStatusText(promille)}`;
+      gaugeExtraEl.innerHTML = `Aktiv: ${formatLiters(activeStats.activePureAlcoholLiters)} reiner Alkohol<br>${getPromilleStatusText(promille)}`;
+
+      const eliminationPerHour = getEliminationGramsPerHour(name);
+      const eliminationLitersPerHour = eliminationPerHour / (1000 * ALCOHOL_DENSITY);
+
+      if (activeStats.activeGrams <= 0) {
+        metabolismBoxEl.innerHTML = `
+          <strong>Abbau-Timer</strong><br>
+          Kein aktiver Alkohol mehr im Rechner.
+        `;
+      } else {
+        metabolismBoxEl.innerHTML = `
+          <strong>Abbau-Timer</strong><br>
+          Letztes Getränk: ${activeStats.lastDrinkTime ? formatTime(activeStats.lastDrinkTime) : "--:--"}<br>
+          Noch aktiv im Körper: ${formatLiters(activeStats.activePureAlcoholLiters)}<br>
+          Abbaugeschwindigkeit: ca. ${formatLiters(eliminationLitersPerHour)}/h<br>
+          Voraussichtlich auf 0,00‰ in: ${formatMinutes(activeStats.timeUntilZeroMinutes)}
+        `;
+      }
     }
 
     function updateStatus() {
@@ -1087,7 +1257,7 @@
         statusTextEl.textContent = "Noch nüchtern heute.";
       } else {
         statusTextEl.textContent =
-          `${name}: ${beerToday} Bier · ${drinksToday} Drinks · ${shotsToday} Shots · ${formatLiters(litersToday)} · ${formatLiters(pureToday)} rein · ca. ${formatPromille(promille)}‰`;
+          `${name}: ${beerToday} пиво · ${drinksToday} Drinks · ${shotsToday} стопки · ${formatLiters(litersToday)} · ${formatLiters(pureToday)} brutto · ca. ${formatPromille(promille)}‰`;
       }
     }
 
@@ -1112,9 +1282,11 @@
         item.className = "leaderboard-item";
 
         const icon =
-          index === 0 ? "пидер" :
+          index === 0 ? "👑" :
           index === 1 ? "🥈" :
-          index === 2 ? "🥉" : "schwach";
+          index === 2 ? "🥉" : "🍻";
+
+        const activeStats = getActiveAlcoholStats(name);
 
         item.innerHTML = `
           <div class="leaderboard-top">
@@ -1127,10 +1299,11 @@
           <div class="leaderboard-sub">
             🍺 пиво: ${state.allTime[name].beer} gesamt / ${state.daily.counts[name].beer} heute<br>
             🍹 Drinks: ${state.allTime[name].drinks} gesamt / ${state.daily.counts[name].drinks} heute<br>
-            🥃 Stopki: ${state.allTime[name].shots} gesamt / ${state.daily.counts[name].shots} heute<br>
+            🥃 стопки: ${state.allTime[name].shots} gesamt / ${state.daily.counts[name].shots} heute<br>
             📏 Liter: ${formatLiters(getProfileAlcoholAllTime(name))} gesamt / ${formatLiters(getProfileAlcoholToday(name))} heute<br>
             🧪 Reiner Alkohol: ${formatLiters(getProfilePureAlcoholAllTime(name))} gesamt / ${formatLiters(getProfilePureAlcoholToday(name))} heute<br>
-            🚗 Promille heute: ca. ${formatPromille(calculatePromille(name))}‰
+            ⚡ Aktiv im Körper: ${formatLiters(activeStats.activePureAlcoholLiters)}<br>
+            🚗 Promille jetzt: ca. ${formatPromille(calculatePromille(name))}‰
           </div>
         `;
 
@@ -1162,7 +1335,7 @@
               (shots * SHOT_LITERS * SHOT_ALC) +
               ((entry.counts[name]?.drinkAlcoholValues || []).reduce((sum, value) => sum + value, 0));
 
-            return `${name}: 🍺 ${beer} · 🍹 ${drinks} · 🥃 ${shots} · 📏 ${formatLiters(liters)} · 🧪 ${formatLiters(entryPureAlcohol)}`;
+            return `${name}: 🍺 ${beer} пиво · 🍹 ${drinks} Drinks · 🥃 ${shots} стопки · 📏 ${formatLiters(liters)} · 🧪 ${formatLiters(entryPureAlcohol)}`;
           })
           .join("<br>");
 
@@ -1170,7 +1343,7 @@
           <div class="history-date">${entry.label}</div>
           <div class="history-total">
             Gesamt an diesem Abend: <strong>${entry.total}</strong><br>
-            🍺 пиво: <strong>${entry.totalBeer}</strong> · 🍹 Drinks: <strong>${entry.totalDrinks}</strong> · 🥃 Stopki: <strong>${entry.totalShots}</strong><br>
+            🍺 пиво: <strong>${entry.totalBeer}</strong> · 🍹 Drinks: <strong>${entry.totalDrinks}</strong> · 🥃 стопки: <strong>${entry.totalShots}</strong><br>
             📏 Liter: <strong>${formatLiters(entry.totalLiters || 0)}</strong><br>
             🧪 Reiner Alkohol: <strong>${formatLiters(entry.totalPureAlcohol || 0)}</strong>
           </div>
@@ -1232,6 +1405,14 @@
       animateCardOut(1, () => setIndex(state.currentIndex - 1));
     }
 
+    function createEvent(type, pureAlcoholLiters) {
+      return {
+        type,
+        pureAlcoholLiters,
+        timestamp: Date.now()
+      };
+    }
+
     function addCount(type) {
       const name = currentProfile();
 
@@ -1242,10 +1423,30 @@
         const alcoholValue = randomDrinkAlcoholLiters();
         state.allTime[name].drinkAlcoholValues.push(alcoholValue);
         state.daily.counts[name].drinkAlcoholValues.push(alcoholValue);
+        state.daily.events[name].push(createEvent("drink", alcoholValue));
+      }
+
+      if (type === "beer") {
+        state.daily.events[name].push(createEvent("beer", BEER_LITERS * BEER_ALC));
+      }
+
+      if (type === "shots") {
+        state.daily.events[name].push(createEvent("shot", SHOT_LITERS * SHOT_ALC));
       }
 
       updateUI();
       fireConfetti();
+    }
+
+    function removeLastEventByType(name, eventType) {
+      const events = state.daily.events[name];
+      for (let i = events.length - 1; i >= 0; i--) {
+        if (events[i].type === eventType) {
+          events.splice(i, 1);
+          return true;
+        }
+      }
+      return false;
     }
 
     function removeCount(type) {
@@ -1261,6 +1462,15 @@
       if (type === "drinks") {
         state.daily.counts[name].drinkAlcoholValues.pop();
         state.allTime[name].drinkAlcoholValues.pop();
+        removeLastEventByType(name, "drink");
+      }
+
+      if (type === "beer") {
+        removeLastEventByType(name, "beer");
+      }
+
+      if (type === "shots") {
+        removeLastEventByType(name, "shot");
       }
 
       updateUI();
@@ -1279,7 +1489,7 @@
     }
 
     function resetAll() {
-      const ok = confirm("Ich hoffe wir werden diesen Abend niemals vergessen, bis zum nächsten mal Jungs");
+      const ok = confirm("Wirklich alles zurücksetzen? Gesamtstände, Tagesstände und Abend-Statistik werden gelöscht.");
       if (!ok) return;
       state = getFreshState();
       updateUI();
@@ -1435,6 +1645,12 @@
     }
 
     updateUI();
+
+    setInterval(() => {
+      updateGauge();
+      updateStatus();
+      renderLeaderboard();
+    }, 30000);
   </script>
 </body>
 </html>
